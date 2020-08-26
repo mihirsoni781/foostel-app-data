@@ -1,0 +1,205 @@
+<div class="container-l" style="margin-left: 20px;">
+    <span class="span-s" style="padding:10px; font-size: 25px;;">Register Rooms</span><br><br>
+    <div *ngIf="turn==0" (submit)="next()" >
+        
+        <form>
+            <input autofocus="turn==0" autocomplete="off" maxlength="40" name="s_name" type="text" class="inputs"
+                style="width: 230px;" placeholder="Service name..." [(ngModel)]="service.s_name">
+            <button [disabled]="!service.s_name" type="submit" class="btn-fa"><i class="fa fa-arrow-right"></i></button>
+        </form>
+    </div>
+    <div *ngIf="turn==1"  style="float: left; margin-bottom: 20px; margin-right: 20px;">
+        <form action="" class="msg-box" (submit)="add()">
+        <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+        <div align="justify" class="span-s" style="width: 70%; padding: 0 10px 0 10px;">
+            We need Geolocation of your Service to make your service better visible to customers.
+            Add marker at your service's location. You can locate your current location using button on top right
+                corner.
+        </div>
+
+        <div>
+            <div *ngIf="loading_status" class="loader-s" style="margin-left: 25px;"></div>
+            <button style="align-self: center; margin-left: 20px; color: blue;" type="submit"
+                *ngIf="mapservice.map._userCoors && !loading_status" class="btn-fa"><i class=" fa fa-angle-right"></i></button>
+        </div>
+        </form>
+    </div>
+    <div [class.hidden]="turn!=1" style="float: left;width: 85%;  max-width: 500px; vertical-align: top;" >
+        <div [class.hidden]="turn!=1" id="map"
+            style=" max-width: 500px; width: 85%;; min-height: 400px; margin-right: 20px;
+             border: solid 10px rgba(255, 255, 255, .2); border-radius: 30px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.5); ">
+        </div>
+    </div>
+    <div *ngIf="turn==2" >
+        <form (submit)="next()" class="msg-box">
+        <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+            <div align="justify" class="span-s" style="width: 70%; padding: 0 10px 0 10px;">
+                Great ! your Service is located at <span style="color: black; font-weight: 600;">
+                        {{service.s_loc[0].place_name}} </span>
+                    provide additional info (house no. and street) so that customers would be able to reach easily.
+                    <br><br>
+                    <input autocomplete="off" name="service_address" [(ngModel)]="service.s_add" autofocus="on" type="text" class="inputs-2"
+                        placeholder="Enter building number, street" style="width: 200px; margin-right: 5px;">
+            </div>
+            <button *ngIf="service.s_add && service.s_add.trim()!=''" type="submit" class="btn-fa" style="color: darkblue;;"><i
+                    class="fa fa-angle-right"></i></button>
+        </form>
+    </div>
+
+    <div *ngIf="turn==3">
+        <form #form2="ngForm" action="" class="msg-box" (submit)="next()">
+            <div class="span-s">
+                Enter owners contact number, it'll be public.<br><br>
+                <input name="dc" #dc="ngModel" [class.invalid]="dc.invalid && dc.dirty" pattern="[0-9]{1,}" class="inputs-2"
+                    style="width: 20px;" placeholder="+" [(ngModel)]="service.dc" required>
+        
+                <input name="phone" #phone="ngModel" [class.invalid]="phone.invalid && phone.dirty" type="text" class="inputs-2"
+                    placeholder=" Phone" [(ngModel)]="service.owner_contact" required pattern="[0-9]{10}">
+            </div>
+            <button type="submit" class="btn-fa" style="align-self: flex-end;" [disabled]="form2.invalid"><i
+                    class="fa fa-angle-right"></i></button>
+        </form>
+    </div>
+
+    <div *ngIf="turn==4">
+        <form class="msg-box" action="" (submit)="next()">
+            <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+            <div class="span-s" style="width: 80%; padding: 0 10px 0 10px;">
+                To deliver better service experience to customers, provide us more information about your service. <br>
+                Which type of Room tenant you want? <br><br>
+                <button type="submit" class="reply2" (click)="room.for.gender='male'">Male</button>
+                <button type="submit" class="reply2" (click)="room.for.gender='female'">Female</button>
+                <button type="submit" class="reply2" (click)="room.for.gender='anyone'">Anyone</button>
+            </div>
+        </form>
+    </div>
+    
+    <div *ngIf="turn==5">
+        <form class="msg-box" action="" (submit)="next()">
+        <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+        <div class="span-s" style="width: 80%; padding: 0 10px 0 10px;">
+            Which type of Room tenant you want? <br><br>
+            <button type="submit" class="reply2" (click)="room.for.type='employee'">Employee</button>
+            <button type="submit" class="reply2" (click)="room.for.type='student'">Student</button>
+            <button type="submit" class="reply2" (click)="room.for.type='anyone'">Anyone</button>
+        </div>
+        </form>
+    </div>
+
+    <div *ngIf="turn==6">
+        <form (submit)="next()" class="msg-box">
+        <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+        <div class="span-s" style="width: 80%; padding: 0 10px 0 10px;">
+                Which type(s) of Room(s) you have? <br><br>
+                <button [class.select2-selected]="room.room_types._1_room.isset" type="button" class="select2" (click)="room.room_types._1_room.isset=1-room.room_types._1_room.isset">Single Room</button>
+                <button [class.select2-selected]="room.room_types._2_room.isset" type="button" class="select2" (click)="room.room_types._2_room.isset=1-room.room_types._2_room.isset">2 Rooms</button>
+                <button [class.select2-selected]="room.room_types.with_kichen_room.isset" type="button" class="select2" (click)="room.room_types.with_kichen_room.isset=1-room.room_types.with_kichen_room.isset">Room with Kitchen</button>
+                <button [class.select2-selected]="room.room_types.other_room.isset" type="button" class="select2" (click)="room.room_types.other_room.isset=1-room.room_types.other_room.isset">Other</button>
+        </div>
+        <button class="btn-fa" (click)="next()"><i class="fa fa-angle-right"></i></button>
+        </form>
+    </div>
+
+    <div *ngIf="turn==7">
+        <form (submit)="next()" #form6="ngForm" class="msg-box" style="width: 80%; max-width: 450px;">
+        <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+        <div class="span-s" style="width: 80%; padding: 0 10px 0 10px;">            
+                Enter available rooms and rent/month. <br><br>
+                
+                <div *ngIf="room.room_types._1_room.isset" style="width:80%; margin-bottom: 20px   ;">
+                    <span  class="reply2" style="opacity:1;" >Single Room</span> 
+                    <br><br>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc1="ngModel" name="rc1"  [(ngModel)]="room.room_types._1_room.available"  
+                        [class.invalid]="rc1.invalid && rc1.dirty" pattern="[0-9]{0,}" required min="1" class="inputs-2" style="width: 50px;">
+                    </div>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt1="ngModel" name="rt1" [(ngModel)]="room.room_types._1_room.rent"
+                        [class.invalid]="rt1.invalid && rt1.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;"[placeholder]="service.s_currency_symbol">
+                    </div>    
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm1="ngModel" name="rcm1" [(ngModel)]="room.room_types._1_room.cm"
+                        [class.invalid]="rcm1.invalid && rcm1.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;"[placeholder]="service.s_currency_symbol"></div>
+                </div>
+                <div *ngIf="room.room_types._2_room.isset" style="width:80%; margin-bottom: 20px   ;">
+                    <span  class="reply2" style="opacity:1;">2 Room</span>
+                    <br><br>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc2="ngModel" name="rc2"  [ngModel] = "room.room_types._2_room.available"  [class.invalid]="rc2.invalid && rc2.dirty" pattern="[0-9]{0,}" required min="1"
+                        class="inputs-2" style="width: 50px;"></div>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt2="ngModel" name="rt2" [(ngModel)]="room.room_types._2_room.rent"
+                        [class.invalid]="rt2.invalid && rt2.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;"[placeholder]="service.s_currency_symbol"></div>
+
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm2="ngModel" name="rcm2" [(ngModel)]="room.room_types._2_room.cm"
+                        [class.invalid]="rcm2.invalid && rcm2.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;"[placeholder]="service.s_currency_symbol"></div>
+                    
+                </div>
+
+                <div *ngIf="room.room_types.with_kichen_room.isset" style="width:80%; margin-bottom: 20px  ;">
+                    <span  class="reply2" style="opacity:1;">Room with kitchen</span>
+                    <br><br>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc3="ngModel" name="rc3" [ngModel]="room.room_types.with_kichen_room.available"
+                        [class.invalid]="rc3.invalid && rc3.dirty" pattern="[0-9]{0,}" required min="1" class="inputs-2"
+                        style="width: 50px;"></div>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt3="ngModel" name="rt3" [(ngModel)]="room.room_types.with_kichen_room.rent"
+                        [class.invalid]="rt3.invalid && rt3.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;"[placeholder]="service.s_currency_symbol"></div>
+                    
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm3="ngModel" name="rcm3" [(ngModel)]="room.room_types.with_kichen_room.cm"
+                        [class.invalid]="rcm3.invalid && rcm3.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;"[placeholder]="service.s_currency_symbol"></div>
+                </div>
+
+                <div *ngIf="room.room_types.other_room.isset" style="width:80%; margin-bottom: 20px;">
+                    <span  class="reply2" style="opacity:1;">Other</span>
+                    <br><br>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc4="ngModel" name="rc4" [ngModel]="room.room_types.other_room.available"
+                        [class.invalid]="rc4.invalid && rc4.dirty" pattern="[0-9]{0,}" required min="1" class="inputs-2"
+                        style="width: 50px;"></div>
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt4="ngModel" name="rt4" [(ngModel)]="room.room_types.other_room.rent"
+                        [class.invalid]="rt4.invalid && rt4.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;" [placeholder]="service.s_currency_symbol"></div>
+
+                    <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm4="ngModel" name="rcm4" [(ngModel)]="room.room_types.other_room.cm"
+                        [class.invalid]="rcm4.invalid && rcm4.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                        style="width: 50px;" [placeholder]="service.s_currency_symbol"></div>
+                </div>
+            </div>
+                <button *ngIf="form6.valid" type="submit" class="btn-fa" style="font-size: 40px;"><i class="fa fa-angle-right"></i></button>
+            </form>
+        </div>
+
+    <div *ngIf="turn==8">
+        <form (submit)="insert()" class="msg-box">
+            <button type="button" class="btn-fa" (click)="previous()"><i class="fa fa-angle-left"></i></button>
+        <div class="span-s" style="width: 80%; padding: 0 10px 0 10px;">
+                Select facilities your service provide. <br><br>
+
+                <button [class.select2-selected]="room.facilities.parking" type="button" class="select2"
+                    (click)="room.facilities.parking=1-room.facilities.parking">Parking</button>
+                <button [class.select2-selected]="room.facilities.attached_bath" type="button" class="select2"
+                    (click)="room.facilities.attached_bath=1-room.facilities.attached_bath">Attached Bath</button>
+                <button [class.select2-selected]="room.facilities.housekeeping" type="button" class="select2"
+                    (click)="room.facilities.housekeeping=1-room.facilities.housekeeping">Housekeeping</button>
+                <button [class.select2-selected]="room.facilities.bed" type="button" class="select2"
+                    (click)="room.facilities.bed=1-room.facilities.bed">Bed</button>
+                <button [class.select2-selected]="room.facilities.ac" type="button" class="select2"
+                    (click)="room.facilities.ac=1-room.facilities.ac">AC</button>
+                <input name="otherfac" type="text" class="inputs-2" [(ngModel)]="room.facilities.other" placeholder="Other...">
+        </div>
+            <button type="submit" class="btn-fa"><i class="fa fa-angle-right"></i></button>
+            <div *ngIf="loading_status" class="loader-s" style="margin-left: 25px;"></div>
+        </form>
+    </div>
+
+    <div *ngIf="turn==9">
+        <form (submit)="view()"  class="msg-box">
+            <div class="span-s" style="width: 80%; padding: 0 10px 0 10px;">
+                Your service has been added successfully!<br><br>
+    
+                <button type="submit" class="reply2">View</button>
+            </div>
+        </form>
+    </div>
+
+</div>

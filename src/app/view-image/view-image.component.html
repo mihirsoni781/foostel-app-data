@@ -1,0 +1,14 @@
+<div style=" align-self: center; z-index: 1; height: auto; position: absolute; left: 0; right: 0; top:0; bottom:0; 
+    background-color: rgba(255,255,255,0.4);
+    backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div [class.loader-s]="loading">
+
+    </div>
+    <div *ngIf="!loading"
+        style="width: fit-content; height: fit-content;">
+
+        <img *ngIf="imageDataUrl"
+            style="display: block; margin-top: 10px; filter: none; width: 100%; height: auto; max-width: 500px;"
+            src="{{imageDataUrl}}" alt="">
+    </div>
+</div>

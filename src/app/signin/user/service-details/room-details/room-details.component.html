@@ -1,0 +1,304 @@
+<router-outlet></router-outlet>
+<style>
+    .reply2{
+        opacity: 1;
+    }
+</style>
+<form *ngIf="router.url.split('?')[0]=='/user/room-details'" #form1="ngForm">
+    <div class="container-l" style="min-height: 400px;padding: 20px; background-color: rgba(255,255,255,.9); 
+    margin-top: 20px;; display: flex; align-items:flex-start; width: 80vw; max-width: fit-content;"
+        [class.loading]="loading">
+        <table style="width: 250px; margin-right: 10px;">
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Service Name
+                    </span><br>
+                    <input maxlength="40" required #sn="ngModel" maxlength="50" [class.invalid]="sn.invalid && sn.dirty"
+                        name="sn" min="1" [(ngModel)]="service_.s_name" type="text" class="inputs-2"
+                        style=" margin-left: 0px;">
+                </td>
+
+
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Service type
+                    </span><br>
+                    <input disabled maxlength="40" required #st="ngModel" maxlength="50"
+                        [class.invalid]="st.invalid && st.dirty" name="st" min="1" [(ngModel)]="service_.s_type"
+                        type="text" class="inputs-2" style=" margin-left: 0px; border: none;">
+                </td>
+
+
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Location
+                    </span><br>
+                    <div class="msg-box span-xs" style="margin-top: 10px; ">
+                        <div>
+                            {{service_.s_loc[0].place_name}}
+                            <br><br><button *ngIf="mapservice.map._userCoors" class="reply2" style="font-size: 11px;" (click) = "setDefaultLoc()" >Discard Change</button>
+                            <button *ngIf="mapservice.map._userCoors && !loading3" class="reply2" style="font-size: 11px;" (click)="saveLoc()">Save
+                                </button>
+                            <div *ngIf="loading3" class="loader-s" style="display:inline-block; width: 5px; height: 5px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td>
+                    <div id="map" style="width: 300px; height: 150px;">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Address
+                    </span><br>
+
+                    <div>
+                        <input [(ngModel)]="service_.s_add" name="addr" type="text" class="inputs-2"
+                            style="border-color: darkblue; margin-left: 0px; width: 200px;" placeholder="Address">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Owner Phone
+                    </span><br>
+            
+                    <div class="span-s">
+                        <input name="dc" #dc="ngModel" [class.invalid]="dc.invalid && dc.dirty" pattern="[0-9]{1,}" class="inputs-2"
+                            style="width: 20px;" placeholder="+" [(ngModel)]="service_.dc" required>
+            
+                        <input name="phone" #phone="ngModel" [class.invalid]="phone.invalid && phone.dirty" type="text"
+                            class="inputs-2" placeholder=" Phone" [(ngModel)]="service_.owner_contact" required pattern="[0-9]{10}">
+                    </div>
+            
+                </td>
+            </tr>
+
+            <tr>
+            
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Room for
+                    </span><br>
+                    <select style="border-style: none; padding: 5px 10px; outline: none; font-size: 11px; background: transparent;"
+                        name="rf" [(ngModel)]="service_.s_data.for.gender" id="">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="Anyone">Anyone</option>
+                    </select>
+                    <select style="border-style: none; padding: 5px 10px; outline: none; font-size: 11px; background: transparent;"
+                        name="rfs" [(ngModel)]="service_.s_data.for.type" id="">
+                        <option value="student">Student</option>
+                        <option value="employee">Employee</option>
+                        <option value="anyone">Anyone</option>
+                    </select>
+                </td>
+            </tr>
+
+        </table>
+
+        <table style="width: 250px;">
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Room-type
+                    </span><br>
+
+                    <div style="margin-top: 10px;">
+                        <style>
+                            .select2{
+                                font-size: 10px;;
+                            }
+                        </style>
+                        <button [class.select2-selected]="service_.s_data.room_types._1_room.isset" type="button" class="select2"
+                        (click)="service_.s_data.room_types._1_room.isset=1-service_.s_data.room_types._1_room.isset">Single Room</button>
+                    <button [class.select2-selected]="service_.s_data.room_types._2_room.isset" type="button" class="select2"
+                        (click)="service_.s_data.room_types._2_room.isset=1-service_.s_data.room_types._2_room.isset">2 Rooms</button><br>
+                    <button [class.select2-selected]="service_.s_data.room_types.with_kichen_room.isset" type="button" class="select2"
+                        (click)="service_.s_data.room_types.with_kichen_room.isset=1-service_.s_data.room_types.with_kichen_room.isset">Room with Kitchen</button>
+                    <button [class.select2-selected]="service_.s_data.room_types.other_room.isset" type="button" class="select2"
+                        (click)="service_.s_data.room_types.other_room.isset=1-service_.s_data.room_types.other_room.isset">Other</button>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="font-size: 11px;">
+
+                    <!--SPAN-->
+                    <style>
+                        .reply2{
+                            font-size: 11px;
+                        }
+                    </style>
+                    <div *ngIf="service_.s_data.room_types._1_room.isset" style="width:80%; margin-bottom: 20px   ;">
+                        <span class="reply2" style=" opacity: 1; margin: 0px 10px 10px 0px;">Single Room</span>
+                        <br><br>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc1="ngModel" name="rc1"
+                                [(ngModel)]="service_.s_data.room_types._1_room.available" [class.invalid]="rc1.invalid && rc1.dirty"
+                                pattern="[0-9]{0,}" required min="1" class="inputs-2" style="width: 50px;">
+                        </div>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt1="ngModel" name="rt1"
+                                [(ngModel)]="service_.s_data.room_types._1_room.rent" [class.invalid]="rt1.invalid && rt1.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol">
+                        </div>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm1="ngModel"
+                                name="rcm1" [(ngModel)]="service_.s_data.room_types._1_room.cm" [class.invalid]="rcm1.invalid && rcm1.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    </div>
+                    <div *ngIf="service_.s_data.room_types._2_room.isset" style="width:80%; margin-bottom: 20px   ;">
+                        <span class="reply2" style="opacity:1;">2 Room</span>
+                        <br><br>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc2="ngModel" name="rc2"
+                                [ngModel]="service_.s_data.room_types._2_room.available" [class.invalid]="rc2.invalid && rc2.dirty" pattern="[0-9]{0,}"
+                                required min="1" class="inputs-2" style="width: 50px;"></div>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt2="ngModel" name="rt2"
+                                [(ngModel)]="service_.s_data.room_types._2_room.rent" [class.invalid]="rt2.invalid && rt2.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm2="ngModel"
+                                name="rcm2" [(ngModel)]="service_.s_data.room_types._2_room.cm" [class.invalid]="rcm2.invalid && rcm2.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    
+                    </div>
+                    
+                    <div *ngIf="service_.s_data.room_types.with_kichen_room.isset" style="width:80%; margin-bottom: 20px  ;">
+                        <span class="reply2" style="opacity:1;">Room with kitchen</span>
+                        <br><br>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc3="ngModel" name="rc3"
+                                [ngModel]="service_.s_data.room_types.with_kichen_room.available" [class.invalid]="rc3.invalid && rc3.dirty"
+                                pattern="[0-9]{0,}" required min="1" class="inputs-2" style="width: 50px;"></div>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt3="ngModel" name="rt3"
+                                [(ngModel)]="service_.s_data.room_types.with_kichen_room.rent" [class.invalid]="rt3.invalid && rt3.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm3="ngModel"
+                                name="rcm3" [(ngModel)]="service_.s_data.room_types.with_kichen_room.cm" [class.invalid]="rcm3.invalid && rcm3.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    </div>
+                    
+                    <div *ngIf="service_.s_data.room_types.other_room.isset" style="width:80%; margin-bottom: 20px;">
+                        <span class="reply2" style="opacity:1;">Other</span>
+                        <br><br>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Available<input #rc4="ngModel" name="rc4"
+                                [ngModel]="service_.s_data.room_types.other_room.available" [class.invalid]="rc4.invalid && rc4.dirty"
+                                pattern="[0-9]{0,}" required min="1" class="inputs-2" style="width: 50px;"></div>
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Rent/Month<input #rt4="ngModel" name="rt4"
+                                [(ngModel)]="service_.s_data.room_types.other_room.rent" [class.invalid]="rt4.invalid && rt4.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    
+                        <div style=" margin-bottom:10px ;display: inline-block; color:black;">Caution Money<input #rcm4="ngModel"
+                                name="rcm4" [(ngModel)]="service_.s_data.room_types.other_room.cm" [class.invalid]="rcm4.invalid && rcm4.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2" style="width: 50px;"
+                                [placeholder]="service_.s_currency_symbol"></div>
+                    </div>
+                </td>
+            </tr>
+
+            
+
+                        
+        </table>
+        <table style="width: fit-content;">
+            <tr>
+                
+                <td>
+                    
+                    <style>
+                        .reply2 {
+                            font-size: 11px;
+                        }
+                    </style>
+                    <div *ngIf="service_.s_data.room_types._1_room.isset" style="width:80%; margin-bottom: 20px   ;">
+                        <span class="reply2" style="opacity:1;">Facilities</span>
+                    </div>
+                    <button [class.select2-selected]="service_.s_data.facilities.parking" type="button" class="select2"
+                        (click)="service_.s_data.facilities.parking=1-service_.s_data.facilities.parking">Parking</button>
+                    <button [class.select2-selected]="service_.s_data.facilities.attached_bath" type="button" class="select2"
+                        (click)="service_.s_data.facilities.attached_bath=1-service_.s_data.facilities.attached_bath">Attached
+                        Bath</button>
+                    <button [class.select2-selected]="service_.s_data.facilities.housekeeping" type="button" class="select2"
+                        (click)="service_.s_data.facilities.housekeeping=1-service_.s_data.facilities.housekeeping">Housekeeping</button><br>
+                    <button [class.select2-selected]="service_.s_data.facilities.bed" type="button" class="select2"
+                        (click)="service_.s_data.facilities.bed=1-service_.s_data.facilities.bed">Bed</button>
+                    <button [class.select2-selected]="service_.s_data.facilities.ac" type="button" class="select2"
+                        (click)="service_.s_data.facilities.ac=1-service_.s_data.facilities.ac">AC</button>
+                    <input name="otherfac" type="text" class="inputs-2" [(ngModel)]="service_.s_data.facilities.other"
+                        placeholder="Other...">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Photos
+                    </span><br><br>
+                    <div  style="width: 300px; height: 300px; background-color: rgba(0, 0, 0, 0.1);">
+                        <div routerLink="view-photo/{{img.imageId}}" class="btn-fa" *ngFor="let img of service_.photos; index as idx" style=" display: inline-block; vertical-align: top; width: 100px;height: 100px;
+                            background-color: whitesmoke;
+                            background-image: url({{img.tn}}); background-size: cover; background-repeat: no-repeat; cursor: pointer;
+                            " >
+
+                            <button (click)="selectToDelete(idx);" class="btn-fa"
+                                style="width: 30px; height: 30px; border-radius: 50%; background-color:rgba(0,0,0, 0.4);
+                                 color: white; font-size: 20px; margin: 2px 0 0 2px; position: absolute;">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+
+                        <div *ngFor="let img of curImages; index as i" style=" display: inline-block; vertical-align: top; width: 100px;height: 100px;
+                            background-color: whitesmoke;
+                            background-image: url({{img}}); background-size: cover; background-repeat: no-repeat; cursor: pointer;
+                            ">
+                            <button (click)="remove(i);" class="btn-fa" style="width: 30px; height: 30px; border-radius: 50%; background-color: whitesmoke;
+                                                             color: black; font-size: 20px; margin: 2px 0 0 2px; position: absolute;">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                        <label for="uploadIn" *ngIf='service_.photos.length<=9' class="btn-fa" style=" display: inline-block; padding: 35px;">
+                            <i class="fa fa-plus" style="font-size: 30px; color: black;"></i>
+                        </label>
+                    </div>
+                    <input id="uploadIn" style="display: none;" (input)="preview($event);" multiple type="file" accept="image/jpeg">
+                    
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <div style="margin-top: 20px; text-align: center; align-self: flex-end;">
+                        <button type="button" class="reply2" (click)="router.navigate(['user/services'])">Cancel</button>
+                        <button type="button" [class.btn-disabled]="form1.invalid" [disabled]="form1.invalid" *ngIf="!loading2"
+                            class="btn-4" (click)="update()">Update</button>
+                        <div *ngIf="loading2" class="loader-s" style="display:inline-block; margin-left: 25px;"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

@@ -1,0 +1,29 @@
+<div class="container-l" >
+    <div class="container-m" >
+        <span class="span-m">Register Services</span><br><br>
+        <div *ngIf="router.url=='/register-services'" class="msg-box" style="display: inline-block; background-color: transparent;">
+            <span style="width: 100%; text-align: justify; font-size: 12px; ">
+                Register your services Rooms, Hostels, Food Centers to facilitate your business and increase service popularity. 
+            </span>
+            <div style="margin-top: 20px;">
+                <style>
+                    .opt{
+                        background-color: white;
+                        padding: 10px 20px;
+                        margin: 2px;
+                        min-width: 150px;
+                        display: inline-block;
+                        font-size: 13px;;
+                    }
+                </style>
+                <span class="opt" [routerLink]="['register-rooms']" style=" color:black;">Register Rooms <i
+                        class="fa fa-angle-right"></i></span><br><br>
+                <span class="opt" [routerLink]="['register-hostels']" style=" color:black;">Register Hostels <i
+                        class="fa fa-angle-right"></i></span><br><br>
+                <span class="opt" [routerLink]="['register-food-centers']" style=" color:black;">Register Food Centers <i
+                        class="fa fa-angle-right"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>

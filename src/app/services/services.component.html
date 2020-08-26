@@ -1,0 +1,344 @@
+<div class="search"  >
+    <form (submit)="search()">
+        <input autocomplete="off" name="ss" type="text" class="search-ip" [(ngModel)]="searchString">
+        
+        <button type="submit" class="btn-fa" style="position: absolute; left: 180px; margin-top: 8px;" ><i *ngIf="!sloading" class="fa fa-search"></i>
+        <div *ngIf="sloading" class="loader-s" style=" border-top-color: black;">
+        </div>
+        </button>
+    </form>
+
+    <div  class="nearme" style="background-color: rgba(255, 255, 255, 0.639); border: none;" >
+        
+            <div  [class.dropdowncontainer]="nearMeList.display"
+                style="align-self: flex-start; width: 70px;">
+                
+                <button class="dropdown"  (click)="nearMeList.display=1-nearMeList.display" style="vertical-align: top; font-size: 12px;" >
+                    {{nearMeList.selected}} <i *ngIf="!nearMeList.display"  class="fa fa-angle-down"></i>
+                    <i *ngIf="nearMeList.display" class="fa fa-angle-up"></i>
+                </button>
+                <div class="dropdownlist" *ngIf="nearMeList.display">
+                    <div [class.dropdownoption-selected]="nearMeList.isSelected(i)" class="dropdownoption"
+                        *ngFor="let i of nearMeList.options" (click)="nearMeList.select(i);" >
+                        {{i}}
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="nearMeList.display" class="blocker" (click)="nearMeList.display=0">
+            
+            </div>
+            <button class="btn-fa span-xs" style="padding:8px; border-radius: 20px; display: inline-block; vertical-align: middle;" (click)="searchNearMe(nearMeList.selected)" ><i class="fa fa-search" ></i><span style="margin-left: 0px;"></span></button>        
+
+    </div>
+
+</div>
+<span *ngIf="alert" class="span-xs" style="color: darkslategrey; display: block;margin-bottom: 10px; width: fit-content; margin-left: 20px;">
+    *{{alert}}.
+</span>
+
+
+<div *ngIf="router.url=='/services'" style=" display: block; float: left; width: fit-content;"  >
+    <div *ngIf="result"  style="margin-left: 10px; font-size: 11px; width: 300px; padding: 0 20px 0 20px; display: flex; align-items: center; 
+            height: 30px; background-color: rgba(255, 255, 255, 0.53);">
+        
+        <div class="span-s" [class.dropdowncontainer]="sortselect.display" style="align-self: flex-start; margin-top:5px; width: 130px;">
+            <button class="dropdown" (click)="sortselect.display=1-sortselect.display">
+                {{sortselect.selected}} <i *ngIf="!sortselect.display" class="fa fa-angle-down"></i>
+                <i *ngIf="sortselect.display" class="fa fa-angle-up"></i>
+            </button>
+            <div class="dropdownlist" *ngIf="sortselect.display">
+                <div [class.dropdownoption-selected]="sortselect.isSelected(i)" class="dropdownoption" *ngFor="let i of sortselect.options"
+                    (click)="sortResult(i)">
+                    {{i}}
+                </div>
+            </div>
+        </div>
+        <div *ngIf="sortselect.display" class="blocker" (click)="sortselect.display=0">
+        </div>
+
+        <div>
+            <button class="btn-fa span-s" (click)="filter_.disp=1-filter_.disp" >Filter 
+                <i *ngIf="!filter_.disp" class="fa fa-angle-down"></i>
+                <i *ngIf="filter_.disp" class="fa fa-angle-up"></i>
+            </button>
+            <div class="blocker" *ngIf="filter_.disp" (click)="filter_.disp=0">
+
+            </div>
+
+            <button  #viewmap id="viewmap" (click)="mapToggle(viewmap,resultt)" class="btn-fa span-s" style=" margin-left: 10px;">
+                Show Map
+            </button>
+
+            <!---->
+            <div *ngIf="filter_.disp && filter_.type=='Room'"  style="z-index: 2; width: 330px; position: absolute;left:20px; border-color: whitesmoke; padding: 10px; background-color: whitesmoke;
+                margin-top: 20px;
+            ">
+            
+            <style>
+                .reply2{
+                    font-size: 16px;;
+                }
+                
+            </style>
+                <div>
+                    <div style="margin: 5px ;">
+                        <span class="reply2" style="opacity:1;">Room for</span>
+                    </div>
+                    <select style="border-style: none; padding: 5px 10px; outline: none; font-size: 11px; background: transparent;"
+                        name="rf" [(ngModel)]="room_filter.s_data.for.gender" id="">
+                        <option value="null">Not set</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="anyone">Anyone</option>
+                    </select>
+                    <select style="border-style: none; padding: 5px 10px; outline: none; font-size: 11px; background: transparent;"
+                        name="rfs" [(ngModel)]="room_filter.s_data.for.type" id="">
+                        <option value="null">Not set</option>
+                        <option value="student">Student</option>
+                        <option value="employee">Employee</option>
+                        <option value="anyone">Anyone</option>
+                    </select>
+                </div>
+            
+            
+                <div style="margin: 5px ;">
+                    <style>
+                        .select2 {
+                            font-size: 10px;
+                            
+                        }
+                    </style>
+                    <div style="width:80%; margin-bottom: 5px ;">
+                        <span class="reply2" style="opacity:1;">Room Type</span>
+                    </div>
+                    <button [class.select2-selected]="room_filter.s_data.room_types._1_room.isset" type="button" class="select2"
+                        (click)="room_filter.s_data.room_types._1_room.isset=1-room_filter.s_data.room_types._1_room.isset">Single
+                        Room</button>
+                    <button [class.select2-selected]="room_filter.s_data.room_types._2_room.isset" type="button" class="select2"
+                        (click)="room_filter.s_data.room_types._2_room.isset=1-room_filter.s_data.room_types._2_room.isset">2
+                        Rooms</button><br>
+                    <button [class.select2-selected]="room_filter.s_data.room_types.with_kichen_room.isset" type="button"
+                        class="select2"
+                        (click)="room_filter.s_data.room_types.with_kichen_room.isset=1-room_filter.s_data.room_types.with_kichen_room.isset">Room
+                        with Kitchen</button>
+                </div>
+            
+                <div>
+                    <style>
+                        .reply2 {
+                            font-size: 11px;
+                        }
+                    </style>
+                    <div style="width:80%; margin: 5px ;">
+                        <span class="reply2" style="opacity:1;">Facilities</span>
+                    </div>
+                    <button [class.select2-selected]="room_filter.s_data.facilities.parking" type="button" class="select2"
+                        (click)="room_filter.s_data.facilities.parking=1-room_filter.s_data.facilities.parking">Parking</button>
+                    <button [class.select2-selected]="room_filter.s_data.facilities.attached_bath" type="button" class="select2"
+                        (click)="room_filter.s_data.facilities.attached_bath=1-room_filter.s_data.facilities.attached_bath">Attached
+                        Bath</button>
+                    <button [class.select2-selected]="room_filter.s_data.facilities.housekeeping" type="button" class="select2"
+                        (click)="room_filter.s_data.facilities.housekeeping=1-room_filter.s_data.facilities.housekeeping">Housekeeping</button><br>
+                    <button [class.select2-selected]="room_filter.s_data.facilities.bed" type="button" class="select2"
+                        (click)="room_filter.s_data.facilities.bed=1-room_filter.s_data.facilities.bed">Bed</button>
+                    <button [class.select2-selected]="room_filter.s_data.facilities.ac" type="button" class="select2"
+                        (click)="room_filter.s_data.facilities.ac=1-room_filter.s_data.facilities.ac">AC</button>
+            
+                </div>
+                <button class="btn-4" (click)="filterRoom();">Apply</button>
+                <button class="select2">Remove</button>
+            </div>
+
+
+
+
+            <div *ngIf="filter_.disp && filter_.type=='Hostel'" style="z-index: 2; width: 330px; position: absolute;left:20px; border-color: whitesmoke; padding: 10px; background-color: whitesmoke;
+                margin-top: 20px;
+            ">
+            
+                <div style=" margin: 10px;">
+                    <span class="reply2" style="color: darkblue;">
+                        Hostel Type
+                    </span><br>
+            
+                    <select style=" margin: 5px; border-style: none; padding: 5px 10px; outline: none; font-size: 11px; background: transparent;"
+                        name="ht" [(ngModel)]="hostel_filter.hostel_type" id="">
+                        <option value="null">Not Set</option>
+                        <option value="boys">Boys</option>
+                        <option value="girls">Girls</option>
+                    </select>
+                </div>
+
+
+                <div class="reply2" style="margin: 10px;">
+                    Single Bed
+                    <button class="btn-fa"
+                        (click)="hostel_filter.room_type.single_bed.isset=1-hostel_filter.room_type.single_bed.isset"><i
+                            *ngIf="hostel_filter.room_type.single_bed.isset" class="fa fa-toggle-on"></i>
+                        <i *ngIf="!hostel_filter.room_type.single_bed.isset" class="fa fa-toggle-off"></i>
+                    </button>
+                </div>
+
+
+                <div class="reply2" style="margin: 10px;">
+                    Double Bed
+                    <button class="btn-fa"
+                        (click)="hostel_filter.room_type.double_bed.isset=1-hostel_filter.room_type.double_bed.isset"><i
+                            *ngIf="hostel_filter.room_type.double_bed.isset" class="fa fa-toggle-on"></i>
+                        <i *ngIf="!hostel_filter.room_type.double_bed.isset" class="fa fa-toggle-off"></i>
+                    </button>
+                </div>
+
+
+                <div class="reply2" style="margin: 10px;">
+                    Tripple Bed
+                    <button class="btn-fa"
+                        (click)="hostel_filter.room_type.tripple_bed.isset=1-hostel_filter.room_type.tripple_bed.isset"><i
+                            *ngIf="hostel_filter.room_type.tripple_bed.isset" class="fa fa-toggle-on"></i>
+                        <i *ngIf="!hostel_filter.room_type.tripple_bed.isset" class="fa fa-toggle-off"></i>
+                    </button>
+                </div>
+
+            
+            
+                <div>
+                    <span class="reply2" style="margin: 10px;">
+                        Facilities
+                    </span><br><br>
+                    <div class="span-xs" style="width: 80%; padding: 0 10px 0 10px;">
+                        <button [class.select2-selected]="hostel_filter.facilities.parking" type="button" class="select2"
+                            (click)="hostel_filter.facilities.parking=1-hostel_filter.facilities.parking"
+                            style="font-size:11px">Parking</button>
+                        <button [class.select2-selected]="hostel_filter.facilities.attached_bath" type="button" class="select2"
+                            (click)="hostel_filter.facilities.attached_bath=1-hostel_filter.facilities.attached_bath"
+                            style="font-size:11px">Attached Bath</button>
+                        <button [class.select2-selected]="hostel_filter.facilities.housekeeping" type="button" class="select2"
+                            (click)="hostel_filter.facilities.housekeeping=1-hostel_filter.facilities.housekeeping"
+                            style="font-size:11px">Housekeeping</button><br>
+                        <button [class.select2-selected]="hostel_filter.facilities.gym" type="button" class="select2"
+                            (click)="hostel_filter.facilities.gym=1-hostel_filter.facilities.gym"
+                            style="font-size:11px">Gym</button>
+                        <button [class.select2-selected]="hostel_filter.facilities.ac" type="button" class="select2"
+                            (click)="hostel_filter.facilities.ac=1-hostel_filter.facilities.ac"
+                            style="font-size:11px">AC</button><br>
+                        <button [class.select2-selected]="hostel_filter.facilities.meal" type="button" class="select2"
+                            (click)="hostel_filter.facilities.meal=1-hostel_filter.facilities.meal"
+                            style="font-size:11px">Meal</button><br>
+                
+                        <button [class.select2-selected]="hostel_filter.facilities.cloth_washing" type="button" class="select2"
+                            (click)="hostel_filter.facilities.cloth_washing=1-hostel_filter.facilities.cloth_washing"
+                            style="font-size:11px">Cloth Washing</button><br>
+                    </div>
+                </div>
+            
+                
+                <button class="btn-4" (click)="filterHostel();">Apply</button>
+                <button class="select2">Remove</button>
+            </div>
+
+
+
+
+
+
+
+            <div *ngIf="filter_.disp && filter_.type=='Food Center'" style="z-index: 2; width: 320px; position: absolute;left:20px; border-color: whitesmoke; padding: 10px; background-color: whitesmoke;
+                margin-top: 20px;
+            ">
+            
+                    <div class="span-s" style=" margin-top: 20px; width: 80%; padding: 0 10px 0 10px;">
+                        <span  style="color: darkblue; font-weight: 500;">
+                            Meals Provided
+                        </span><br><br>
+
+                        <button [class.select2-selected]="food_center_filter.meal.breakfast.isset" type="button" class="select2"
+                            (click)="food_center_filter.meal.breakfast.isset=1-food_center_filter.meal.breakfast.isset; ">Breakfast</button>
+                        <button [class.select2-selected]="food_center_filter.meal.lunch.isset" type="button" class="select2"
+                            (click)="food_center_filter.meal.lunch.isset=1-food_center_filter.meal.lunch.isset ; ">Lunch</button>
+                        <button [class.select2-selected]="food_center_filter.meal.dinner.isset" type="button" class="select2"
+                            (click)="food_center_filter.meal.dinner.isset=1-food_center_filter.meal.dinner.isset;">Dinner</button>
+                    </div>
+
+
+            
+                    <div class="span-s" style=" margin-top: 20px; width: 80%; padding: 0 10px 0 10px;">
+                        <span style="color: darkblue; font-weight: 500;">
+                            Facilities
+                        </span><br><br>
+                        <button [class.select2-selected]="food_center_filter.facilities.home_delivery" type="button" class="select2"
+                            (click)="food_center_filter.facilities.home_delivery=1-food_center_filter.facilities.home_delivery">Home Delivery</button>
+                        
+                        <button [class.select2-selected]="food_center_filter.facilities.customization" type="button" class="select2"
+                            (click)="food_center_filter.facilities.customization=1-food_center_filter.facilities.customization">Customization</button>
+                        
+                        <button [class.select2-selected]="food_center_filter.facilities.come_eat" type="button" class="select2"
+                            (click)="food_center_filter.facilities.come_eat=1-food_center_filter.facilities.come_eat">Come and Eat</button>
+            
+                        <button [class.select2-selected]="hostel_filter.facilities.cloth_washing" type="button" class="select2"
+                            (click)="hostel_filter.facilities.cloth_washing=1-hostel_filter.facilities.cloth_washing"
+                            style="font-size:11px">Cloth Washing</button><br>
+                    </div>
+            
+            
+                <button class="btn-4" (click)="filterFoodCenter();">Apply</button>
+                <button class="select2">Remove</button>
+            </div>
+
+
+        
+        </div>
+    </div>
+
+    
+    
+    <div #resultt
+        style=" margin-top: 20px; height: 400px; margin-right: 0px; overflow-y: scroll;  width: 350px; padding: 2px; margin-left: 10px;
+              border: solid 5px transparent;
+            display: flex; align-items: center; flex-direction: column; 
+        ">
+
+        <div *ngIf="!result && !salert" class="msg-box span-s" style=" margin-top: 10px; width: 100%;;">
+            <div style="color: rgb(78, 78, 78);">
+                What does, you looking for ? <br> <br>
+                Search near you. <br><br>
+                <button class="btn-fa span-s" (click)="searchNearMe('Room')" style=" font-size: 13px; font-weight: 500; color: black">Room <i class="fa fa-search"></i> </button>
+                <button class="btn-fa span-s" (click)="searchNearMe('Hostel')" style=" font-size: 13px; font-weight: 500; color: black">Hostel <i class="fa fa-search"></i> </button>
+                <button class="btn-fa span-s" (click)="searchNearMe('Food Center')" style=" font-size: 13px; font-weight: 500; color: black">Food <i class="fa fa-search"></i> </button>
+                
+            </div>
+        </div>
+
+        <div *ngIf="salert" class="msg-box " style=" flex-direction: column; width: 300px; margin-bottom: 20px;">
+            <span class="span-xs">
+                 {{salert}} :(
+            </span>
+        </div>
+
+
+        
+        <div class="msg-box " style="width: 300px; margin-bottom: 20px;" *ngFor="let i of result; index as idx">
+            <div>
+                <span class="span-s">
+                    {{i.s_name}}
+                </span><br>
+                <span class="span-xs">
+                    {{i.s_loc[0].place_name}}
+                </span>
+                <br>
+                <button (click)="viewd(idx)" class="btn-fa span-s" style=" margin-top: 10px; margin-right: 30px;">Details <i class="fa fa-angle-right"></i></button>
+
+                <a [href]="mapservice.navigateAt(i.s_coords)" style="color: black; margin-right: 30px; position: relative; right: 10px;" target="_blank"  class="btn-fa" ><i class="fa fa-location-arrow"></i></a>
+                <a class="btn-fa" [href]="'tel:'+i.dc+i.owner_contact" style="color: black; margin-right: 30px; position: relative; right: 10px;" target="_blank" ><i class="fa fa-phone"></i></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<router-outlet>
+    
+</router-outlet>
+
+<div id="mapp"  [class]="router.url=='/services' && windowWidth>800?'visible':'not-visible'" style="float:left; display: block;height: 450px; max-width: 600px; min-width: 350px; width: 91vw;; align-self: center; margin-right: 30px; margin-left: 10px;">
+    <div #mapp id="map" style="max-width: inherit; width: inherit;  height: 100%;">
+    </div>
+</div>

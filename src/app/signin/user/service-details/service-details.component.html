@@ -1,0 +1,88 @@
+<form #form1="ngForm" >
+<div class="container-l" style="min-height: 400px;   padding: 20px; background-color: rgba(255,255,255,.9); 
+    border-radius: 20px;margin-top: 20px;; display: flex; flex-direction: row; align-items:flex-start;" [class.loading]="loading" >
+<table style="min-width: 250px;">
+    <tr>
+        <td>
+            <span class="span-xs" style="color: darkblue;">
+                Service Name
+            </span><br>
+            <input maxlength="40" required #sn = "ngModel" maxlength="50" [class.invalid]="sn.invalid && sn.dirty" name="sn" min="1" [(ngModel)]="service_.s_name" type="text" class="inputs-2" style=" margin-left: 0px;">
+        </td>
+
+        
+    </tr>
+
+    <tr>
+        <td>
+            <span class="span-xs" style="color: darkblue;">
+                Service type
+            </span><br>
+            <input disabled maxlength="40" required #st="ngModel" maxlength="50" [class.invalid]="st.invalid && st.dirty" name="st"
+                min="1" [(ngModel)]="service_.s_type" type="text" class="inputs-2" style=" margin-left: 0px; border: none;">
+        </td>
+    
+    
+    </tr>
+    
+    <tr>
+        <td>
+            <span class="span-xs" style="color: darkblue;">
+                Address
+            </span><br>
+            
+            <div>
+                <input [(ngModel)]="service_.s_add" name="addr" type="text" class="inputs-2" style="border-color: darkblue; margin-left: 0px; width: 200px;" placeholder="Address" >
+            </div>
+        </td>
+    </tr>
+   
+    <tr>
+        <td>
+            <span class="span-xs" style="color: darkblue;">
+                Owner Phone
+            </span><br>
+    
+            <div>
+                <input type="text" class="inputs-2" style="border-color: darkblue; margin-left: 0px; width: 200px;"
+                    placeholder="Phone no.">
+            </div>
+        </td>
+    </tr>
+    
+</table>
+
+<table style="min-width: 250px;">
+    <tr>
+        <td>
+            <span class="span-xs" style="color: darkblue;">
+                Location
+            </span><br>
+            <div class="msg-box span-xs">
+                <div>
+                    {{service_.s_loc[0].place_name}}
+                    <br><br><button class="reply2" style="font-size: 11px;">Change</button>
+                </div>
+            </div>
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <div id="map" style="width: 300px; height: 150px;">
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<br><br>
+<div style="text-align: center; align-self: flex-end;">
+    <button class="reply2" (click)="router.navigate(['user/services'])">Cancel</button>
+    <button [class.btn-disabled]="form1.invalid || !form1.dirty" [disabled]="form1.invalid || !form1.dirty"
+        *ngIf="!loading2" class="btn-4" (click)="update()">Update</button>
+    <div *ngIf="loading2" class="loader-s" style="display:inline-block; margin-left: 25px;"></div>
+</div>
+</div>
+</form>
+

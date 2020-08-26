@@ -1,0 +1,28 @@
+
+<div *ngIf="!loading && router.url=='/user/services'" class="container-l"
+    style="  height: fit-content; max-height: 500px; min-height: 100px; overflow-y: scroll; 
+        width: 400px; margin: 20px; border-radius: 10px; display: flex; flex-direction: column; align-items: center;">
+
+    <div   *ngFor="let ser of myServices"   class="msg-box" style="width: 250px; margin-top: 20px; border-radius: 0;">
+        <div class="span-s" style="font-size: 13px;">
+            <span class="span-s" >{{ser.s_name}}</span>
+            <br>
+            <div style="margin-top: 15px;; ">
+                <style>
+                    .reply2{
+                        font-size:13px;
+                    }
+                </style>
+            <button #sid name="sid" value="{{myServices.indexOf(ser)}}" (click)="viewd(sid.value);"  style="margin-right: 20px;" 
+                class="reply2" >View Details <i class="fa fa-angle-right"></i> </button>
+            </div>
+        </div>
+
+    </div>
+    
+    <div routerLink="../../register-services" *ngIf="!myServices[0]" class="reply2" style="font-size: 40px; margin-top: 100px; color: gray; cursor: pointer;" >
+        Add+
+    </div>
+</div>
+<div *ngIf="loading" class="loader-s" style=" margin-top:200px; border-top-color: gray; width: 70px; height: 70px;">
+</div>

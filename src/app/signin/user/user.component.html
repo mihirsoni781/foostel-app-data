@@ -1,0 +1,11 @@
+<div style="display: flex; align-items: center; flex-direction: column; margin-top: 10px; ">
+    <div style="font-size: 11px; width: 250px; padding: 0 20px 0 20px; display: flex; align-items: center; 
+        height: 30px; background-color: rgba(255, 255, 255, .3); border-radius: 30px; ">
+        <a routerLinkActive="active" class="span-s" [routerLink]="['profile']" class="nav-menu">Profile</a>
+        <a routerLinkActive="active" class="span-s" [routerLink]="['services']" class="nav-menu">Services</a>
+        <a routerLinkActive="active" class="span-s" [routerLink]="['security']" class="nav-menu">Security</a>   
+    </div>
+
+    <router-outlet></router-outlet>
+
+</div>

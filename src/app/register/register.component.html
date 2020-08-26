@@ -1,0 +1,65 @@
+<div class="container-l">
+    <div style="margin-left: 50px; margin-top: 50px;">
+        <span class="span-m">Register</span><br>
+        <span class="span-s">Register on Foostel to add your services on our platform.</span>
+        <br><br>
+        <form #form0="ngForm" action="" class="msg-box" *ngIf="turn==0" (submit)="next()">
+            <div class="span-s">
+                Your good name? <br><br>
+                <input #username="ngModel" name="username" type="text" 
+                class="inputs-2" placeholder="Enter here" [(ngModel)]="user.name" maxlength="40" required >
+            </div>
+            <button [disabled]="form0.invalid" type="submit" class="btn-fa" style="align-self: flex-end;"><i class="fa fa-angle-right"></i></button>
+        </form>
+
+        <form #form1="ngForm" action="" class="msg-box" *ngIf="turn==1" (submit)="checkMail()">
+            <div class="span-s">
+                Your Email Address ? <br><br>
+                <input #e [class.invalid]="email.invalid && email.dirty" #email="ngModel" name="email" pattern="^.{1,}@\w{1,}[.].{1,}\w$" required class="inputs-2" placeholder="Enter Email here" [(ngModel)]="user.email">
+            </div>
+            <button  [class.disabled]='e.invalid' type="submit" class="btn-fa" style="align-self: flex-end;" [disabled]="form1.invalid"><i
+                    class="fa fa-angle-right"></i></button>
+        </form>
+        <div class="msg-box" style="margin-top: 20px;" *ngIf="user_exist">
+            <div class="span-s">
+                An Email address you've entered is already in use.<br><br>
+                <a routerLink="../signin">Sign In</a>
+            </div>
+        </div>
+
+        <form #form2="ngForm" action="" class="msg-box" *ngIf="turn==2" (submit)="next()">
+            <div class="span-s">
+                Enter contact number.<br><br>
+                <input name="dc" #dc="ngModel"  [class.invalid]="dc.invalid && dc.dirty" pattern="[0-9]{1,}" 
+                class="inputs-2" style="width: 20px;" placeholder="+" [(ngModel)]="user.dc" required>
+                
+                <input name="phone" #phone="ngModel" [class.invalid]="phone.invalid && phone.dirty" type="text" 
+                class="inputs-2" placeholder=" Phone" [(ngModel)]="user.phone" required pattern="[0-9]{10}">
+            </div>
+            <button type="submit" class="btn-fa" style="align-self: flex-end;" [disabled]="form2.invalid"><i class="fa fa-angle-right"></i></button>
+        </form>
+        
+        <form #form3="ngForm" *ngIf="turn==3"  action="" class="msg-box"  (submit)="verify()">
+            <div class="span-s">
+                <b>Create password.</b>  <br><br>
+                Password must contain atleast one Uppercase, Lowercase alphabet, atleast one numeric digit and it must be atleast 8 character long.
+                <br><br>
+                <input name="pw" #pw="ngModel" [class.invalid]="!match(pw.value) && pw.dirty"  class="inputs-2"
+                    type="password" placeholder="Create password" [(ngModel)]="user.password" required>
+                <br><br>
+                <input name="pw2" ngModel #pw2="ngModel" [class.invalid]="!compare(pw2.value) && pw2.dirty" class="inputs-2" type="password"
+                    placeholder="Confirm password" required>
+            </div>
+            <button type="submit" class="btn-fa" style="align-self: flex-end;" [disabled]="form3.invalid || !match(pw.value) || !compare(pw2.value)"><i
+                    class="fa fa-angle-right"></i></button>
+        </form>
+
+
+        <div class="msg-box" *ngIf="turn==4">
+            <div class="span-s">
+                We have sent verification link at your entered email address. Use verification link to proceed next.
+            </div>
+        </div>
+
+    </div>
+</div>

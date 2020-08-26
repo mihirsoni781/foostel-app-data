@@ -1,0 +1,219 @@
+<!-- HOSTEL  -->
+
+
+
+<form #form1="ngForm">
+    <div class="container-l" style="min-height: 500px;  padding: 20px; background-color: rgba(255,255,255,.9); 
+    border-radius: 20px;margin-top: 20px;; display: flex; flex-direction: row; align-items:flex-start;"
+        [class.loading]="loading">
+        <table>
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Service Name
+                    </span><br>
+                    <input maxlength="40" required #sn="ngModel" maxlength="50" [class.invalid]="sn.invalid && sn.dirty"
+                        name="sn" min="1" [(ngModel)]="service_.s_name" type="text" class="inputs-2"
+                        style=" margin-left: 0px;">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Location
+                    </span><br>
+                    <div class="msg-box span-xs">
+                        <div>
+                            {{service_.s_loc[0].place_name}}
+                            <br><br><button class="reply2" style="font-size: 11px;">Change</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div id="map" style="width: 300px; height: 150px;">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Address
+                    </span><br>
+
+                    <div>
+                        <input [(ngModel)]="service_.s_add" name="addr" type="text" class="inputs-2"
+                            style="border-color: darkblue; margin-left: 0px; width: 300px;" placeholder="Address">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Owner Phone
+                    </span><br>
+
+                    <div>
+                        <input type="text" class="inputs-2"
+                            style="border-color: darkblue; margin-left: 0px; width: 300px;" placeholder="Phone no.">
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Service Type
+                    </span><br>
+                    <input name="st" [(ngModel)]="service_.s_type" type="text" class="inputs-2"
+                        style="border:none; margin-left: 0px;" disabled>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <table>
+                        <tr *ngIf="service_.s_data.room_type.single_bed.isset">
+                            <td>
+                                Single Bed (Rent/Year)
+                            </td>
+                            <td>
+                                <input autocomplete="off" #rc1="ngModel" name="rc1"
+                                    [(ngModel)]="service_.s_data.room_type.single_bed.rent_y"
+                                    [class.invalid]="rc1.invalid && rc1.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width:50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="service_.s_data.room_type.double_bed.isset">
+                            <td>
+                                Double Bed (Rent/Year)
+                            </td>
+                            <td>
+                                <input autocomplete="off" #rc2="ngModel" name="rc2"
+                                    [(ngModel)]="service_.s_data.room_type.double_bed.rent_y"
+                                    [class.invalid]="rc2.invalid && rc2.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width: 50px;  margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="service_.s_data.room_type.tripple_bed.isset">
+                            <td>
+                                Tripple Bed (Rent/Year)
+                            </td>
+                            <td>
+                                <input autocomplete="off" #rc3="ngModel" name="rc3"
+                                    [(ngModel)]="service_.s_data.room_type.tripple_bed.rent_y"
+                                    [class.invalid]="rc3.invalid && rc3.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width: 50px;  margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="service_.s_data.room_type.other.isset">
+                            <td>
+                                Other (Rent/Year)
+                            </td>
+                            <td>
+                                <input autocomplete="off" #rc4="ngModel" name="rc4"
+                                    [(ngModel)]="service_.s_data.room_type.other.rent_y"
+                                    [class.invalid]="rc4.invalid && rc4.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width: 50px;  margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Meal Charge/Year
+                            </td>
+                            <td>
+                                <input autocomplete="off" #rcm1="ngModel" name="rcm1"
+                                    [(ngModel)]="service_.s_data.meal_charge_y"
+                                    [class.invalid]="rcm1.invalid && rcm1.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width: 50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Caution Money
+                            </td>
+                            <td>
+                                <input autocomplete="off" #rcm2="ngModel" name="rcm2" [(ngModel)]="service_.s_data.cm"
+                                    [class.invalid]="rcm2.invalid && rcm2.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width: 50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+
+        </table>
+
+        <table style=" width: 250px;">
+            <tr>
+                <td>
+                    <span class="span-xs" style="color: darkblue;">
+                        Facilities
+                    </span><br><br>
+                    <div class="span-xs" style="width: 80%; padding: 0 10px 0 10px;">
+                        <button [class.select2-selected]="service_.s_data.facilities.parking" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.parking=1-service_.s_data.facilities.parking"
+                            style="font-size:11px">Parking</button>
+                        <button [class.select2-selected]="service_.s_data.facilities.attached_bath" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.attached_bath=1-service_.s_data.facilities.attached_bath"
+                            style="font-size:11px">Attached Bath</button>
+                        <button [class.select2-selected]="service_.s_data.facilities.housekeeping" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.housekeeping=1-service_.s_data.facilities.housekeeping"
+                            style="font-size:11px">Housekeeping</button><br>
+                        <button [class.select2-selected]="service_.s_data.facilities.gym" type="button" class="select2"
+                            (click)="service_.s_data.facilities.gym=1-service_.s_data.facilities.gym"
+                            style="font-size:11px">Gym</button>
+                        <button [class.select2-selected]="service_.s_data.facilities.ac" type="button" class="select2"
+                            (click)="service_.s_data.facilities.ac=1-service_.s_data.facilities.ac"
+                            style="font-size:11px">AC</button><br>
+                        <button [class.select2-selected]="service_.s_data.facilities.meal" type="button" class="select2"
+                            (click)="service_.s_data.facilities.meal=1-service_.s_data.facilities.meal"
+                            style="font-size:11px">Meal</button><br>
+
+                        <button [class.select2-selected]="service_.s_data.facilities.cloth_washing" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.cloth_washing=1-service_.s_data.facilities.cloth_washing"
+                            style="font-size:11px">Cloth Washing</button><br>
+                        <input name="otherfac" type="text" class="inputs-2"
+                            [(ngModel)]="service_.s_data.facilities.other" placeholder="Other..."
+                            style="font-size:11px">
+                    </div>
+                </td>
+            </tr>
+            <br><br>
+
+        </table>
+
+        <div style="text-align: center; align-self: flex-end;">
+            <button class="reply2" (click)="router.navigate(['user/services'])">Cancel</button>
+            <button [class.btn-disabled]="form1.invalid || !form1.dirty" [disabled]="form1.invalid || !form1.dirty"
+                *ngIf="!loading2" class="btn-4" (click)="update()">Update</button>
+            <div *ngIf="loading2" class="loader-s" style="display:inline-block; margin-left: 25px;"></div>
+        </div>
+
+    </div>
+
+</form>

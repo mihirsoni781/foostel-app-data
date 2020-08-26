@@ -1,0 +1,34 @@
+<div class="container-l">
+    <div  style="margin-left: 50px; margin-top: 50px;">
+        <span class="span-m">Sign In</span><br><br>
+        <form class="msg-box span-s" action="" *ngIf="verified==null || verified==false" (submit)="checkEmail()">
+            <div>
+                Enter registered Email Address <br><br> 
+                <input #e="ngModel" [class.invalid]="verified==false || (e.invalid && e.dirty)" [(ngModel)]="email" name="email" type="text" class="inputs-2" 
+                    style="width: 200px; text-align: left; " autofocus placeholder="Email"pattern="^.{1,}@\w{1,}[.].{1,}\w$" required>
+                <br>
+                <br><a routerLink="../register" href="" style=" color:black; font-size: 12px;; margin-left: 10px;;">Sign up</a>
+                <span *ngIf="verified==false" class="span-s" style="color: darkred; margin-left: 10px;">You are not registered !</span>
+             </div>
+            <button [class.disabled]='e.invalid' [disabled]='e.invalid'  *ngIf="!loading" type="submit" class="btn-fa"><i class="fa fa-angle-right" style="font-size: 20px;"></i></button>
+            <div *ngIf="loading" class="loader-s" style="border-top-color: black;"></div>
+        </form>
+        
+        <form class="msg-box span-s" action="" *ngIf="verified" (submit)="checkPassword()">
+            <button type="button" class="btn-fa" (click)="previous()" ><i class="fa fa-angle-left" style="font-size: 20px;"></i></button>
+            <div>
+                Enter password<br><br>
+                <input [class.invalid]="pass==false" [(ngModel)]="password" name="password" type="password" class="inputs-2" required
+                    style="width: 200px; text-align: left; " autofocus placeholder="Foostel Password">
+                <br>
+                <br><a  href="" style=" color:black; font-size: 12px;; margin-left: 10px;;">Forgot password?</a>
+                <span *ngIf="pass==false" class="span-s" style="color: darkred; margin-left: 10px;">Wrong password</span>
+            </div>
+            
+            <button *ngIf="!loading" type="submit" class="btn-fa"><i class="fa fa-angle-right" style="font-size: 20px;"></i></button>
+            <div *ngIf="loading" class="loader-s" style="border-top-color: black;"></div>
+
+        </form>
+        
+    </div>  
+</div>

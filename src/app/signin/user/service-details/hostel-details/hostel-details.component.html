@@ -1,0 +1,346 @@
+<!-- HOSTEL  -->
+
+<router-outlet></router-outlet>
+<style>
+    .reply2{
+        font-size: 12px;
+    }
+</style>
+
+<form #form1="ngForm" *ngIf="router.url.split('?')[0]=='/user/hostel-details'"> 
+    <div class="container-l" style="min-height: 400px;padding: 20px; background-color: rgba(255,255,255,.9); 
+    margin-top: 20px;; display: flex; align-items:flex-start; width: 80vw; max-width: fit-content;"
+        [class.loading]="loading">
+        <table style="min-width: 400px ;">
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Service Name
+                    </span><br>
+                    <input maxlength="40" required #sn="ngModel" maxlength="50" [class.invalid]="sn.invalid && sn.dirty"
+                        name="sn" min="1" [(ngModel)]="service_.s_name" type="text" class="inputs-2"
+                        style=" margin-left: 0px;">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Location
+                    </span><br>
+                    <div class="msg-box span-xs">
+                        <div>
+                            {{service_.s_loc[0].place_name}}
+                            <br><br><button  *ngIf="mapservice.map && mapservice.map._userCoors" class="reply2" style="font-size: 11px;"
+                                (click)="setDefaultLoc()">Discard Change</button>
+                            <button *ngIf="mapservice.map && mapservice.map._userCoors && !loading3" class="reply2" style="font-size: 11px;"
+                                (click)="saveLoc()">Save
+                            </button>
+                            <div *ngIf="loading3" class="loader-s" style="display:inline-block; width: 5px; height: 5px;">
+            
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div id="map" style="width: 300px; height: 150px;">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                            Address
+                    </span><br>
+
+                    <div>
+                        <input [(ngModel)]="service_.s_add" name="addr" type="text" class="inputs-2"
+                            style="border-color: darkblue; margin-left: 0px; width: 300px;" placeholder="Address">
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Owner Phone
+                    </span><br>
+
+                    <div class="span-s">
+                        <input name="dc" #dc="ngModel" [class.invalid]="dc.invalid && dc.dirty" pattern="[0-9]{1,}" class="inputs-2"
+                            style="width: 20px;" placeholder="+" [(ngModel)]="service_.dc" required>
+                    
+                        <input name="phone" #phone="ngModel" [class.invalid]="phone.invalid && phone.dirty" type="text" class="inputs-2"
+                            placeholder=" Phone" [(ngModel)]="service_.owner_contact" required pattern="[0-9]{10}">
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+        <table style="min-width: 250px ; ">
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Service Type
+                    </span><br>
+                    <input name="st" [(ngModel)]="service_.s_type" type="text" class="inputs-2"
+                        style="border:none; margin-left: 0px;" disabled>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Hostel Type
+                    </span><br>
+
+                    <select *ngIf="service_.s_data" style="border-style: none; padding: 5px 10px; outline: none; font-size: 11px; background: transparent;" name="ht" [(ngModel)]="service_.s_data.hostel_type" id="" >
+                        <option value="boys">Boys</option>
+                        <option value="girls">Girls</option>
+                    </select>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                                Hostel Room Type
+                            </span><br>
+                        </tr>
+
+                        <tr>
+                            <div style="margin-left: 10px;">
+                                <span class="span-xs">
+                                    Single Bed
+                                    <button class="btn-fa" 
+                                        (click)="service_.s_data.room_type.single_bed.isset=1-service_.s_data.room_type.single_bed.isset" 
+                                            ><i *ngIf="service_.s_data.room_type.single_bed.isset" class="fa fa-toggle-on"></i>
+                                                <i *ngIf="!service_.s_data.room_type.single_bed.isset" class="fa fa-toggle-off"></i>
+                                            </button>
+                                </span><br>
+                                <div *ngIf="service_.s_data.room_type.single_bed.isset">
+                                    <div class="span-xs">
+                                        Single Bed (Rent/Year)
+                                    
+                                        <input autocomplete="off" #rc1="ngModel" name="rc1" [(ngModel)]="service_.s_data.room_type.single_bed.rent_y"
+                                            [class.invalid]="rc1.invalid && rc1.dirty" pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1"
+                                            class="inputs-2" style="width:50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                                
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </tr>
+                        <tr>
+                        </tr>
+
+                        <tr>
+                            <div style="margin-left: 10px;">
+                                <span class="span-xs">
+                                    Double Bed
+                                    <button class="btn-fa"
+                                        (click)="service_.s_data.room_type.double_bed.isset=1-service_.s_data.room_type.double_bed.isset"><i
+                                            *ngIf="service_.s_data.room_type.double_bed.isset" class="fa fa-toggle-on"></i>
+                                        <i *ngIf="!service_.s_data.room_type.double_bed.isset" class="fa fa-toggle-off"></i>
+                                    </button>
+                                </span><br>
+                                <div *ngIf="service_.s_data.room_type.double_bed.isset">
+                                    <div class="span-xs">
+                                        Double Bed (Rent/Year)
+                        
+                                        <input autocomplete="off" #rc2="ngModel" name="rc2"
+                                            [(ngModel)]="service_.s_data.room_type.double_bed.rent_y" [class.invalid]="rc2.invalid && rc2.dirty"
+                                            pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                            style="width:50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                        
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        </tr>
+                        <tr>
+                        </tr>
+                        <tr>
+                            <div style="margin-left: 10px;">
+                                <span class="span-xs">
+                                    Tripple Bed
+                                    <button class="btn-fa"
+                                        (click)="service_.s_data.room_type.tripple_bed.isset=1-service_.s_data.room_type.tripple_bed.isset"><i
+                                            *ngIf="service_.s_data.room_type.tripple_bed.isset" class="fa fa-toggle-on"></i>
+                                        <i *ngIf="!service_.s_data.room_type.tripple_bed.isset" class="fa fa-toggle-off"></i>
+                                    </button>
+                                </span><br>
+                                <div *ngIf="service_.s_data.room_type.tripple_bed.isset">
+                                    <div class="span-xs">
+                                        Tripple Bed (Rent/Year)
+                        
+                                        <input autocomplete="off" #rc3="ngModel" name="rc3"
+                                            [(ngModel)]="service_.s_data.room_type.tripple_bed.rent_y" [class.invalid]="rc3.invalid && rc3.dirty"
+                                            pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                            style="width:50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                        
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        </tr>
+                        <tr>
+                        </tr>
+                        <tr>
+                            <div style="margin-left: 10px;">
+                                <span class="span-xs">
+                                    Other
+                                    <button class="btn-fa"
+                                        (click)="service_.s_data.room_type.other.isset=1-service_.s_data.room_type.other.isset"><i
+                                            *ngIf="service_.s_data.room_type.other.isset" class="fa fa-toggle-on"></i>
+                                        <i *ngIf="!service_.s_data.room_type.other.isset" class="fa fa-toggle-off"></i>
+                                    </button>
+                                </span><br>
+                                <div *ngIf="service_.s_data.room_type.other.isset">
+                                    <div class="span-xs">
+                                        Other (Rent/Year)
+                        
+                                        <input autocomplete="off" #rc4="ngModel" name="rc4"
+                                            [(ngModel)]="service_.s_data.room_type.other.rent_y" [class.invalid]="rc4.invalid && rc4.dirty"
+                                            pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                            style="width:50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol">
+                        
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        </tr>
+                        <tr>
+                        </tr>
+                        <tr>
+                            <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                                Meal Charge/Year
+                            </span><br>
+                            <input autocomplete="off" #rcm1="ngModel" name="rcm1"
+                                [(ngModel)]="service_.s_data.meal_charge_y"
+                                [class.invalid]="rcm1.invalid && rcm1.dirty"
+                                pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                style="width: 50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol" style="margin-left: 0;">
+                        </tr>
+
+                        <tr>
+                            <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                                Caution Money
+                            </span><br>
+                                <input autocomplete="off" #rcm2="ngModel" name="rcm2" [(ngModel)]="service_.s_data.cm"
+                                    [class.invalid]="rcm2.invalid && rcm2.dirty"
+                                    pattern="^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$" required min="1" class="inputs-2"
+                                    style="width: 50px; margin-left: 10px;" [placeholder]="service_.s_currency_symbol" style="margin-left:0">
+
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+
+        </table>
+
+        <table style=" width: 250px;">
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Facilities
+                    </span><br><br>
+                    <div class="span-xs" style="width: 80%; padding: 0 10px 0 10px;">
+                        <button [class.select2-selected]="service_.s_data.facilities.parking" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.parking=1-service_.s_data.facilities.parking"
+                            style="font-size:11px">Parking</button>
+                        <button [class.select2-selected]="service_.s_data.facilities.attached_bath" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.attached_bath=1-service_.s_data.facilities.attached_bath"
+                            style="font-size:11px">Attached Bath</button>
+                        <button [class.select2-selected]="service_.s_data.facilities.housekeeping" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.housekeeping=1-service_.s_data.facilities.housekeeping"
+                            style="font-size:11px">Housekeeping</button><br>
+                        <button [class.select2-selected]="service_.s_data.facilities.gym" type="button" class="select2"
+                            (click)="service_.s_data.facilities.gym=1-service_.s_data.facilities.gym"
+                            style="font-size:11px">Gym</button>
+                        <button [class.select2-selected]="service_.s_data.facilities.ac" type="button" class="select2"
+                            (click)="service_.s_data.facilities.ac=1-service_.s_data.facilities.ac"
+                            style="font-size:11px">AC</button><br>
+                        <button [class.select2-selected]="service_.s_data.facilities.meal" type="button" class="select2"
+                            (click)="service_.s_data.facilities.meal=1-service_.s_data.facilities.meal"
+                            style="font-size:11px">Meal</button><br>
+
+                        <button [class.select2-selected]="service_.s_data.facilities.cloth_washing" type="button"
+                            class="select2"
+                            (click)="service_.s_data.facilities.cloth_washing=1-service_.s_data.facilities.cloth_washing"
+                            style="font-size:11px">Cloth Washing</button><br>
+                        <input name="otherfac" type="text" class="inputs-2"
+                            [(ngModel)]="service_.s_data.facilities.other" placeholder="Other..."
+                            style="font-size:11px">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <br>
+            </tr>
+            <tr>
+                <td>
+                    <span class="reply2" style="margin: 0px 10px 10px 0px;">
+                        Photos
+                    </span><br><br>
+                    <div style="width: 300px; height: 300px; background-color: rgba(0, 0, 0, 0.1);">
+                        <div routerLink="view-photo/{{img.imageId}}" class="btn-fa" *ngFor="let img of service_.photos; index as idx" style=" display: inline-block; vertical-align: top; width: 100px;height: 100px;
+                                                    background-color: whitesmoke;
+                                                    background-image: url({{img.tn}}); background-size: cover; background-repeat: no-repeat; cursor: pointer;
+                                                    ">
+                            <button (click)="selectToDelete(idx);" class="btn-fa" style="width: 30px; height: 30px; border-radius: 50%; background-color:rgba(0,0,0, 0.4);
+                                                         color: white; font-size: 20px; margin: 2px 0 0 2px; position: absolute;">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+            
+                        <div *ngFor="let img of curImages; index as i" style=" display: inline-block; vertical-align: top; width: 100px;height: 100px;
+                                        background-color: whitesmoke;
+                                        background-image: url({{img}}); background-size: cover; background-repeat: no-repeat; cursor: pointer;
+                                        ">
+                            <button (click)="remove(i);" class="btn-fa"
+                                style="width: 30px; height: 30px; border-radius: 50%; background-color: whitesmoke;
+                                                                         color: black; font-size: 20px; margin: 2px 0 0 2px; position: absolute;">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                        <label for="uploadIn" *ngIf='service_.photos.length<=9' class="btn-fa"
+                            style=" display: inline-block; padding: 35px;">
+                            <i class="fa fa-plus" style="font-size: 30px; color: black;"></i>
+                        </label>
+                    </div>
+                    <input id="uploadIn" style="display: none;" (input)="preview($event);" multiple type="file" accept="image/jpeg">
+            
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div style=" margin-top: 20px; text-align: center; align-self: flex-end;">
+                        <button type="button" class="reply2" (click)="router.navigate(['user/services'])">Cancel</button>
+                        <button type="button" [class.btn-disabled]="form1.invalid" [disabled]="form1.invalid" *ngIf="!loading2"
+                            class="btn-4" (click)="update()">Update</button>
+                        <div *ngIf="loading2" class="loader-s" style="display:inline-block; margin-left: 25px;"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        
+
+    </div>
+
+</form>
