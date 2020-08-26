@@ -5,6 +5,7 @@ import { MapserviceService } from '../../mapservice.service';
 import { Service } from '../../../../server/models/service';
 import { ResCountriesService } from '../../../app/res-countries.service';
 import { FoostelservicesService } from '../../foostelservices.service';
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-reg-food-centers',
   templateUrl: './reg-food-centers.component.html',
@@ -45,11 +46,21 @@ export class RegFoodCentersComponent implements OnInit {
 }
 
   turn = 0;
-  constructor(public mapservice: MapserviceService, private cs: ResCountriesService, private foostelservice: FoostelservicesService, private router: Router) {
+  constructor( private auth_: AuthService, public mapservice: MapserviceService, private cs: ResCountriesService, private foostelservice: FoostelservicesService, private router: Router) {
     this.service = new Service('Food Center');
 
   }
   ngOnInit(): void {
+    this.auth_.getUser()
+      .subscribe(res => {
+      }, err => {
+        if (err.status == 401) {
+          console.log("Unauthorized request");
+          this.router.navigate(['/signin'], { queryParams: { nxt: this.router.url } })
+        }
+
+      })
+
     this.mapservice.initMap()
     this.mapservice.enableMarkerAdd()
 

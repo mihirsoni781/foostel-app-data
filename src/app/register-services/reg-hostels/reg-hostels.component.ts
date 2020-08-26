@@ -5,6 +5,7 @@ import { ResCountriesService } from '../../../app/res-countries.service';
 import { FoostelservicesService } from '../../foostelservices.service';
 import { Route } from '@angular/compiler/src/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-reg-hostels',
   templateUrl: './reg-hostels.component.html',
@@ -48,11 +49,20 @@ export class RegHostelsComponent implements OnInit {
   }
 
   turn = 0;
-  constructor(public mapservice: MapserviceService, private cs: ResCountriesService, private fs: FoostelservicesService, private router: Router) {
+  constructor( private auth_: AuthService, public mapservice: MapserviceService, private cs: ResCountriesService, private fs: FoostelservicesService, private router: Router) {
     this.service = new Service('Hostel');
 
   }
   ngOnInit(): void {
+    this.auth_.getUser()
+      .subscribe(res => {
+      }, err => {
+        if (err.status == 401) {
+          console.log("Unauthorized request");
+          this.router.navigate(['/signin'], { queryParams: { nxt: this.router.url } })
+        }
+
+      })
     this.mapservice.initMap()
     this.mapservice.enableMarkerAdd()
   }

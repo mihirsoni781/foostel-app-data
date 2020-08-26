@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
       }, err => {
         if (err.status == 401) {
           console.log("Unauthorized request");
-          this.router.navigate(['/signin'])
+          this.router.navigate(['/signin'],{queryParams: {nxt: this.router.url}})
         }
 
       })

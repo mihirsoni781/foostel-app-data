@@ -309,7 +309,7 @@ router.get('/getService/:sid', function (req, res) {
 })
 
 
-router.put('/updateService', function (req, res) {
+router.put('/updateService', verifyUser,function (req, res) {
     Service.findByIdAndUpdate(req.body.service._id, {
         $set: req.body.service
     }, {
@@ -419,7 +419,7 @@ const { resolve } = require('path');
 const { rejects } = require('assert');
 const { url } = require('inspector');
 
-router.post('/upload', upload.single('file'), function (req, res) {
+router.post('/upload', verifyUser? upload.single('file'):0, function (req, res) {
     console.log(req.file);
     console.log(req.body);
     //res.send(req.file);   
@@ -465,7 +465,7 @@ router.get('/photos/:id',function(req,res){
     })
 })
 
-router.post('/deleteImage',function(req,res){
+router.post('/deleteImage',verifyUser,function(req,res){
     let imageID = req.body.id;
     gfs.files.remove({md5: imageID},function(err){
         if(err)

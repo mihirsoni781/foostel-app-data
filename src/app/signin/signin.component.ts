@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import {AuthService} from '../auth.service';
 import { version } from 'process';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -14,9 +14,15 @@ export class SigninComponent implements OnInit {
   email="";
   password="";
   pass=null;
-  constructor(private auth: AuthService, private router: Router) { }
+  nxt = '/user/profile';
+  constructor(private auth: AuthService, private router: Router, private actr: ActivatedRoute) { }
   turn=0;
   ngOnInit(): void {
+    this.actr.queryParams.subscribe((q)=>{
+      if(q.nxt){
+        this.nxt = q.nxt;
+      }
+    })
   }
   previous()
   {
@@ -39,13 +45,14 @@ export class SigninComponent implements OnInit {
 
   checkPassword(){
     this.loading=true;
+    
     this.auth.checkPass(this.email,this.password)
     .subscribe(res=>{
 
       if(res.pass){
         localStorage.setItem('token',res.token);
         this.loading = false;
-        this.router.navigate(['/user/profile']);
+        this.router.navigate([this.nxt]);
       }else{
         this.loading = false;
         this.pass=false;
